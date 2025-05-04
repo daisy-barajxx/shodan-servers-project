@@ -2,7 +2,7 @@ name: Shodan Build, Test, and Debian Package
 run-name: ${{ github.actor }} is building and testing Shodan API package 
 on: [push]
 env: 
-  SHODAN_API_KEY: ${{secrets.SHODAN_API_KEY}}
+  SHODAN_API_KEY: ${{ secrets.SHODAN_API_KEY }}
 
 jobs:
   build:
@@ -39,8 +39,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install pytest requests
-          pip install -e .
-          pip install pytest
       - name: Run tests
         run: |
           make test
