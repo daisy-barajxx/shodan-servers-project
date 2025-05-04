@@ -64,7 +64,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: shodan-deb-package
-          path: shodansvc-1.0.0.deb
+          path: shodansvc-v1.0.0.deb
       - run: echo "This job's status is ${{ job.status }}."
 
   lint-debian-package:
