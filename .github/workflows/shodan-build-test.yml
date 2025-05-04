@@ -1,0 +1,82 @@
+name: Shodan Build, Test, and Debian Package
+run-name: ${{ github.actor }} is building and testing Shodan API package 
+on: [push]
+env: 
+  SHODAN_API_KEY: ${{ secrets.SHODAN_API_KEY }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2 
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+          pip install -e 
+      - name: Build software
+        run: |
+          make build
+      - run: echo "This job's status is ${{ job.status }}."
+
+  test:
+    runs-on: ubuntu-latest 
+    timeout-minutes: 2
+    needs: build
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          pip install pytest requests.
+      - name: Run tests
+        run: |
+          make test
+      - run: echo "This job's status is ${{ job.status }}."
+
+  debian-package:
+    runs-on: ubuntu-latest 
+    timeout-minutes: 2 
+    needs: test
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential devscripts debhelper dh-python
+      - name: Build Debian Package
+        run: |
+          make build-deb
+      - name: Upload Debian package as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shodan-deb-package
+          path: shodansvc-1.0.0.deb
+      - run: echo "This job's status is ${{ job.status }}."
+
+  lint-debian-package:
+    runs-on: ubuntu-latest x
+    timeout-minutes: 2 
+    needs: debian-package
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install lintian
+        run: |
+          apt-get update
+          apt-get install -y lintian
+      - name: Lint Debian Package
+        run: |
+          make lint-deb
+      - run: echo "This job's status is ${{ job.status }}."

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# stop the shodan service before removing the package
+systemctl stop shodan.service
+systemctl disable shodan.service

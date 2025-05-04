@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# add system user
+echo "Adding user..."
+sudo adduser --system --no-create-home --shell /sbin/nologin shodansvc
+
+# enable and start the shodan service
+echo "Enabling and starting the shodan service..."
+systemctl enable shodan.service
+systemctl start shodan.service

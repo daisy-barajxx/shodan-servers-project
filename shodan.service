@@ -1,0 +1,11 @@
+[Unit]
+Description=Shodan Apache Server Monitor
+After=network.target
+
+[Service]
+User=shodansvc
+ExecStart=/usr/bin/python3 /usr/local/bin/shodan_service.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

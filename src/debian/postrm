@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# remove the system user after the package removal
+userdel shodansvc
+
+# re-enable systemd
+systemctl daemon-reload
