@@ -68,7 +68,7 @@ jobs:
       - run: echo "This job's status is ${{ job.status }}."
 
   lint-debian-package:
-    runs-on: ubuntu-latest x
+    runs-on: ubuntu-latest 
     timeout-minutes: 2 
     needs: debian-package
     steps:
