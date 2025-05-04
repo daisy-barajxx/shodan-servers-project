@@ -7,8 +7,9 @@ from datetime import datetime
 
 class ShodanService:
     def __init__(self):
-        self.output_file = "/tmp/shodan_servers.out"
-        self.api_key = os.getenv("SHODAN_API_KEY")   # Should be configurable
+        self.api_key = os.getenv("SHODAN_API_KEY")
+        if not self.api_key:
+            raise ValueError("SHODAN_API_KEY environment variable not set")
         self.interval = 3600  # 1 hour between polls
 
     def signal_handler(self, sig, frame):
