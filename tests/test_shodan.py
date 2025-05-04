@@ -9,7 +9,7 @@ from src.shodan_service import ShodanService
 @pytest.fixture
 def service(tmp_path):
     """provides a fresh ShadonService instance for each test"""
-    with patch.dict(os.environ, {"SHODAN_API_KEY":"test_key"}):
+    with patch.dict(os.environ, {"SHODAN_API_KEY": "test_key"}):
         s = ShodanService()
         s.output_file = str(tmp_path / "shodan_servers.out")
         return s
