@@ -2,31 +2,31 @@ import pytest
 import os
 import sys
 from pathlib import Path
-import requests
-from unittest.mock import patch, Mock
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.shodan_service import ShodanService
+from unittest.mock import patch, Mock
+import requests
 
 @pytest.fixture
-def service(tmp_path):
+def service():
     """provides a fresh ShadonService instance for each test"""
     with patch.dict(os.environ, {"SHODAN_API_KEY": "test_key"}):
         s = ShodanService()
-        s.output_file = str(tmp_path / "shodan_servers.out")
+        s.output_file = "/tmp/shodan_servers.out"
         return s
 
 def test_service_initialization(service):
     """verify the service initializes with correct default values"""
     assert service.api_key == "test_key"
     assert "shodan_servers.out" in service.output_file
-    assert service.interval == 3600 # an hour interval
+    assert service.interval == 3600
 
-def test_shodan_running(service, tmp_path):
-    """Verify the service creates its output file"""
-    output_file = tmp_path / "shodan_servers.out"
+def test_file_creation(service, tmp_path):
+    """verify the service creates its output file"""
+    output_file = tmp_path / "shodan_creation_test.out"
     service.output_file = str(output_file)
     output_file.touch()
     assert output_file.exists()
-
 
 @patch('requests.get')
 def test_fetch_servers_success(mock_get, service):
