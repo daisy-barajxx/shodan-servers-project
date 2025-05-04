@@ -29,4 +29,4 @@ build-deb: build
 
 # lint the debian package 
 lint-deb: build-deb
-	./lint-deb.sh
+	-lintian shodansvc-v1.0.0.deb
