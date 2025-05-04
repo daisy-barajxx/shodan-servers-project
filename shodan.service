@@ -8,4 +8,4 @@ ExecStart=/usr/bin/python3 /usr/local/bin/shodan_service.py
 Restart=always
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=network.target
