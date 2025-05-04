@@ -39,8 +39,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install pytest requests
-          pip install -e .
-          pip install pytest
       - name: Run tests
         run: |
           make test
