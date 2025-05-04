@@ -36,7 +36,7 @@ When my program receives the SIGTERM signal, it needs to write out that it recei
 Aberdeen, 395946120  
 Recieved SIGTERM, exiting
 
-## Part 5 - Showing the shodansvc output via service
+## Part 3 - Showing the shodansvc output via service
 
 Screenshots I took include:
 * A complete CI/CD pipeline run with all stages visible
