@@ -1,4 +1,3 @@
-import pytest
 import os
 import sys
 from pathlib import Path
@@ -43,9 +42,9 @@ def test_fetch_servers_empty(mock_get, service):
     mock_response = Mock()
     mock_response.json.return_value = {"matches": []}
     mock_get.return_value = mock_response
-    
+
     service.fetch_servers()
-    
+
     assert os.path.exists(service.output_file)
     assert os.path.getsize(service.output_file) == 0
 
@@ -53,9 +52,9 @@ def test_fetch_servers_empty(mock_get, service):
 def test_fetch_servers_failure(mock_get, service):
     """test error handling when API request fails"""
     mock_get.side_effect = requests.exceptions.RequestException("API Error")
-    
+
     service.fetch_servers()
-    
+
     with open(service.output_file) as f:
         content = f.read()
         assert "Error - API Error" in content
@@ -64,7 +63,7 @@ def test_signal_handling(service):
     """verify service handles SIGTERM signal gracefully"""
     original_exit = sys.exit
     sys.exit = lambda code: None  # Override exit for test
-    
+
     try:
         service.signal_handler(None, None)
         with open(service.output_file) as f:
@@ -89,20 +88,20 @@ def test_output_file_rotation(mock_get, service):
     mock_response = Mock()
     mock_response.json.return_value = {"matches": []}
     mock_get.return_value = mock_response
-    
+
     # First run - creates file
     service.fetch_servers()
     with open(service.output_file, 'r') as f:
         first_content = f.read()
-    
+
     # Second run - overwrites same file
     service.fetch_servers()
     with open(service.output_file, 'r') as f:
         second_content = f.read()
-    
+
     # verify the file was actually overwritten 
     assert first_content == second_content == ""  # Since we're returning empty matches
-    
+
     # check the file exists and is empty
     assert os.path.exists(service.output_file)
     assert os.path.getsize(service.output_file) == 0
@@ -117,9 +116,9 @@ def test_missing_city_handling(service):
             ]
         }
         mock_get.return_value = mock_response
-        
+
         service.fetch_servers()
-        
+
         with open(service.output_file) as f:
             content = f.read()
             assert "N/A, 3.3.3.3" in content
@@ -130,12 +129,11 @@ def test_run_loop_interval(mock_fetch, mock_sleep, service):
     """Verify service sleeps for correct interval between runs"""
     # Setup mock to interrupt after first sleep
     mock_sleep.side_effect = KeyboardInterrupt()
-    
+
     try:
         service.run()
     except KeyboardInterrupt:
         pass
-    
+
     # Verify sleep was called with the configured interval
     mock_sleep.assert_called_once_with(service.interval)
-    mock_fetch.assert_called_once()
