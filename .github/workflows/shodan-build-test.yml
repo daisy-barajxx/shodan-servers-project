@@ -38,7 +38,7 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: |
-          pip install pytest requests.
+          pip install pytest requests
       - name: Run tests
         run: |
           make test
